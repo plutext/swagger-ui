@@ -4,6 +4,7 @@ import formatXml from "xml-but-prettier"
 import lowerCase from "lodash/lowerCase"
 import { extractFileNameFromContentDispositionHeader } from "core/utils"
 import win from "core/window"
+import { Document, Page } from 'react-pdf';
 
 export default class ResponseBody extends React.PureComponent {
   state = {
@@ -126,6 +127,14 @@ export default class ResponseBody extends React.PureComponent {
       bodyEl = <pre><audio controls><source src={ url } type={ contentType } /></audio></pre>
     } else if (typeof content === "string") {
       bodyEl = <HighlightCode downloadable fileName={`${downloadName}.txt`} value={ content } />
+      
+    } else if (/pdf/i.test(contentType)) {
+
+      // use https://github.com/wojtekmaj/react-pdf
+      // x  window.URL.createObjectURL(content)
+      
+      bodyEl = <Document file={ content } >   </Document>
+      
     } else if ( content.size > 0 ) {
       // We don't know the contentType, but there was some content returned
       if(parsedContent) {
